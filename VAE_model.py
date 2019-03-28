@@ -196,42 +196,6 @@ class TFVariationalAutoencoder(object):
 
         return error
 
-    def eval_on_model2(self, Xdata, X_true, Xtest, Xtest_true):
-        #given the trained model, if feed in the test data what is the x_hat
-        self.x_test = Xtest
-        self.x_test_true = Xtest_true
-        x_hat_mu = \
-        self.sess.run((self.x_hat_mean),
-                             feed_dict={self.x:self.x_test})
-
-        #X_hat_distribution = Normal(loc=x_hat_mu,
-        #                            scale=tf.exp(x_hat_logsigsq))
-
-        #reconstr_loss = \
-        #    -tf.reduce_sum(X_hat_distribution.log_prob(self.x_test), 1)
-        #latent_loss = -0.5 * tf.reduce_sum(1 + z_log_sigma_sq 
-        #                                   - tf.square(z_mean) 
-        #                                   - tf.exp(z_log_sigma_sq), 1)
-
-        #test_cost = tf.reduce_mean(reconstr_loss + latent_loss) 
-
-        ##calculate the tets error for each epoch
-        #test_error = tf.metrics.mean_squared_error(labels = self.x_test_true, predictions=x_hat_mu)
-        #this return a tuple
-        #test_error = sklearn.metrics.mean_squared_error(self.x_test_true,x_hat_mu)
-        diff = self.x_test_true - x_hat_mu
-        test_error = np.mean(diff**2)**0.5
-
-        train_x_hat = \
-        self.sess.run((self.x_hat_mean),
-                                 feed_dict={self.x: Xdata})
-        train_diff = X_true - train_x_hat
-        train_error = np.mean((X_true - train_x_hat)**2)** 0.5
-
-
-        return test_error, train_error
-
-
         
     def partial_fit(self, X, X_true):
         """Train model based on mini-batch of input data.
